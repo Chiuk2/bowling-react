@@ -13,13 +13,12 @@ export default function CreateBoard(props) {
   return (
 
     <div className="bowling-scores">
-                {/* <div className="frame-grid">
-            {frames.map((element, key) => {
-                return <div className="grid-item">{element}</div>
-            })}
-        </div> */}
+
+        {frames.map((element, key) => {
+            return <div className="frame-item">{element}</div>
+        })}
         {props.scores.map((element, key) => {            
-            return <div className="grid-item">{element}</div>
+            return <div>{element}</div>
         })}
     </div>
   ) 
