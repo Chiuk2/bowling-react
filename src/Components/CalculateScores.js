@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import CreateBoard from './CreateBoard';
 import '../App.css';
 
 export default function CalculateScores({input}) {
     const [score, setScore] = useState(0);
+    const [bowlScores, setBowlScores] = useState([]);
 
     useEffect(async () => {
         let newScore = await calculateScore({input});
@@ -73,42 +75,49 @@ export default function CalculateScores({input}) {
         {
             if (scores[i] === "X")
             {
-            totalScores += caseStrike(scores, i);
-            balls = 0;
+                setBowlScores( arr => [...arr, scores[i]]);
+                setBowlScores( arr => [...arr, " "]);
+                totalScores += caseStrike(scores, i);
+                balls = 0;
             }
             else if (scores[i] === "/")
             {
-            totalScores += caseSpare(scores, i);
-            balls = 0;
+                setBowlScores( arr => [...arr, scores[i]]);
+                totalScores += caseSpare(scores, i);
+                balls = 0;
             }
             else
             {
-            totalScores += parseInt(scores[i]);
-            balls--;
+                setBowlScores( arr => [...arr, scores[i]]);
+                totalScores += parseInt(scores[i]);
+                balls--;
             }
             if (balls == 0)
             {
-            balls = 2;
-            frames+= 1;
+                balls = 2;
+                frames+= 1;
             } 
         }
         else
         {
             if (scores[i] === "X")
             {
-            totalScores += 10;
+                setBowlScores( arr => [...arr, scores[i]]);
+                totalScores += 10;
             }
             else if (scores[i] === "/")
             {
-            totalScores += 10 - parseInt(scores[i-1]);
+                setBowlScores( arr => [...arr, scores[i]]);
+                totalScores += 10 - parseInt(scores[i-1]);
             }
             else
             {
-            totalScores += parseInt(scores[i]);
+                setBowlScores( arr => [...arr, scores[i]]);
+                totalScores += parseInt(scores[i]);
             }
         }
-        console.log(`Frames: ${frames}`);  
-        console.log(totalScores);
+            console.log(`Frames: ${frames}`);  
+            console.log(totalScores);
         }
         return totalScores;    
     }
@@ -117,6 +126,7 @@ export default function CalculateScores({input}) {
   return (
     <div className='calculateScores'>
         <div className='title'>BOWLING ENTRY</div>
+        <CreateBoard scores={bowlScores} />
         <div className='body'>INPUT: {input}</div>
         <div className='footer'>TOTAL SCORE: {score}</div>        
     </div>
