@@ -17,8 +17,11 @@ export default function CreateBoard(props) {
         {frames.map((element, key) => {
             return <div className="frame-item">{element}</div>
         })}
-        {props.scores.map((element, key) => {            
-            return <div>{element}</div>
+        {props.scores[0].map((element, key) => {            
+            return <div className="frame-item">{element}</div>
+        })}
+        {props.scores[1].map((element, key) => {            
+            return <div className="frame-item">{element}</div>
         })}
     </div>
   ) 

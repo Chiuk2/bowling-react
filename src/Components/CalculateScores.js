@@ -5,6 +5,7 @@ import '../App.css';
 export default function CalculateScores({input}) {
     const [score, setScore] = useState(0);
     const [bowlScores, setBowlScores] = useState([]);
+    const [frameScores, setFrameScores] = useState([]);
 
     useEffect(async () => {
         let newScore = await calculateScore({input});
@@ -69,56 +70,79 @@ export default function CalculateScores({input}) {
         let totalScores = 0;
         let frames = 1;
         let balls = 2;
+        let bowlCount = 0
         for (let i = 0; i < scores.length; i++)
         {      
-        if (frames < 10)
-        {
-            if (scores[i] === "X")
+            if (frames < 10)
             {
-                setBowlScores( arr => [...arr, scores[i]]);
-                setBowlScores( arr => [...arr, " "]);
-                totalScores += caseStrike(scores, i);
-                balls = 0;
-            }
-            else if (scores[i] === "/")
-            {
-                setBowlScores( arr => [...arr, scores[i]]);
-                totalScores += caseSpare(scores, i);
-                balls = 0;
-            }
-            else
-            {
-                setBowlScores( arr => [...arr, scores[i]]);
-                totalScores += parseInt(scores[i]);
-                balls--;
-            }
-            if (balls == 0)
-            {
-                balls = 2;
-                frames+= 1;
-            } 
-        }
-        else
-        {
-            if (scores[i] === "X")
-            {
-                setBowlScores( arr => [...arr, scores[i]]);
-                totalScores += 10;
-            }
-            else if (scores[i] === "/")
-            {
-                setBowlScores( arr => [...arr, scores[i]]);
-                totalScores += 10 - parseInt(scores[i-1]);
+                if (scores[i] === "X")
+                {
+                    setBowlScores( arr => [...arr, scores[i]]);
+                    setBowlScores( arr => [...arr, " "]);
+                    bowlCount += 2;
+                    totalScores += caseStrike(scores, i);
+                    balls = 0;
+                }
+                else if (scores[i] === "/")
+                {
+                    setBowlScores( arr => [...arr, scores[i]]);
+                    bowlCount++;
+                    totalScores += caseSpare(scores, i);
+                    balls = 0;
+                }
+                else
+                {
+                    setBowlScores( arr => [...arr, scores[i]]);
+                    bowlCount++;
+                    totalScores += parseInt(scores[i]);
+                    balls--;
+                }
+                if (balls == 0)
+                {
+                    balls = 2;
+                    frames+= 1;
+                    const tmp = totalScores;
+                    setFrameScores( array => [...array, tmp.toString()]);
+                    console.log(`Frames: ${frames}`);  
+                    console.log(totalScores);
+                } 
             }
             else
             {
-                setBowlScores( arr => [...arr, scores[i]]);
-                totalScores += parseInt(scores[i]);
+                if (scores[i] === "X")
+                {
+                    setBowlScores( arr => [...arr, scores[i]]);
+                    bowlCount++;
+                    totalScores += 10;
+                    balls--;
+                }
+                else if (scores[i] === "/")
+                {
+                    setBowlScores( arr => [...arr, scores[i]]);
+                    bowlCount++;
+                    totalScores += 10 - parseInt(scores[i-1]);
+                    balls--;
+                }
+                else
+                {
+                    setBowlScores( arr => [...arr, scores[i]]);
+                    bowlCount++;
+                    totalScores += parseInt(scores[i]);
+                    balls--;
+                }
+
             }
+        }        
+
+        if (bowlCount < 21 && bowlCount == 20)
+        {
+            setBowlScores( arr => [...arr, " "]);
         }
-            console.log(`Frames: ${frames}`);  
-            console.log(totalScores);
-        }
+        setFrameScores( arr => [...arr, totalScores.toString()]);
+        console.log(`Bowl Length: ${bowlCount}`);
+        console.log(`Frames: ${frames}`);  
+        console.log(totalScores);
+
         return totalScores;    
     }
     
@@ -126,7 +150,7 @@ export default function CalculateScores({input}) {
   return (
     <div className='calculateScores'>
         <div className='title'>BOWLING ENTRY</div>
-        <CreateBoard scores={bowlScores} />
+        <CreateBoard scores={[bowlScores, frameScores]} />
         <div className='body'>INPUT: {input}</div>
         <div className='footer'>TOTAL SCORE: {score}</div>        
     </div>
