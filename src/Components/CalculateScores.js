@@ -103,8 +103,6 @@ export default function CalculateScores({input}) {
                     frames+= 1;
                     const tmp = totalScores;
                     setFrameScores( array => [...array, tmp.toString()]);
-                    console.log(`Frames: ${frames}`);  
-                    console.log(totalScores);
                 } 
             }
             else
@@ -139,9 +137,6 @@ export default function CalculateScores({input}) {
             setBowlScores( arr => [...arr, " "]);
         }
         setFrameScores( arr => [...arr, totalScores.toString()]);
-        console.log(`Bowl Length: ${bowlCount}`);
-        console.log(`Frames: ${frames}`);  
-        console.log(totalScores);
 
         return totalScores;    
     }
